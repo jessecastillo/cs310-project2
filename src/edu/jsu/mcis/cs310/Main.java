@@ -8,9 +8,14 @@ public class Main {
         
         Database db = new Database("cs310_p2_user", "P2!user", "localhost");
         
-        if (db.isConnected())
+        if (db.isConnected()){
             
             System.err.println("Connected Successfully!");
+            
+            //int result = db.withdraw(1, 1);
+            
+            //System.err.println(result);
+        }
         
     }
     

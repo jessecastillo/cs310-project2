@@ -25,6 +25,26 @@ public class Database {
         String result = null;
         
         // INSERT YOUR CODE HERE
+        try{
+            String query = "Select * FROM section WHERE termid = ? AND subjectid = ? AND num = ?;";
+            PreparedStatement pstms = connection.prepareStatement(query);
+            pstms.setInt(1, termid);
+            pstms.setString(2, subjectid);
+            pstms.setString(3, num);
+            
+            boolean hasresults = pstms.execute();
+            
+            if(hasresults){
+                ResultSet resultset = pstms.getResultSet();
+                
+                result = getResultSetAsJSON(resultset);
+            }
+            
+            
+            
+        }
+        catch (Exception e) {e.printStackTrace();}
+        
         
         return result;
         
@@ -35,10 +55,25 @@ public class Database {
         int result = 0;
         
         // INSERT YOUR CODE HERE
+        try{
+            String query = "INSERT INTO registration (studentid, termid, crn) VALUES (?, ?, ?);";
+            PreparedStatement pstms = connection.prepareStatement(query);
+            pstms.setInt(1, studentid);
+            pstms.setInt(2, termid);
+            pstms.setInt(3, crn);
+            
+            result = pstms.executeUpdate();
+        }
+        catch (Exception e) {e.printStackTrace();}
         
         return result;
+            
+            
+        }
         
-    }
+        
+        
+    
 
     public int drop(int studentid, int termid, int crn) {
         
@@ -46,15 +81,42 @@ public class Database {
         
         // INSERT YOUR CODE HERE
         
+        //PreparedStatement pUpdate;
+        try{
+            String query = "DELETE FROM registration WHERE studentid = ? And termid = ? And crn = ?;";
+            PreparedStatement pstms = connection.prepareStatement(query); //pUdate
+            pstms.setInt(1, studentid);
+            pstms.setInt(2, termid);
+            pstms.setInt(3, crn);
+            
+            result = pstms.executeUpdate();
+        }
+        catch (Exception e) {e.printStackTrace();}
+        
         return result;
         
-    }
+ 
+            
+            
+        
+        }
+ 
     
     public int withdraw(int studentid, int termid) {
         
         int result = 0;
         
         // INSERT YOUR CODE HERE
+        try{
+            String query = "DELETE FROM registration WHERE studentid = ? AND termid = ?;";
+            PreparedStatement pstms = connection.prepareStatement(query);
+            pstms.setInt(1, studentid);
+            pstms.setInt(2, termid);
+            
+            result = pstms.executeUpdate();
+            
+        }
+        catch (Exception e) {e.printStackTrace();}
         
         return result;
         
@@ -65,6 +127,24 @@ public class Database {
         String result = null;
         
         // INSERT YOUR CODE HERE
+        try{
+            String query = "SELECT * FROM registration JOIN section ON registration.crn = section.crn;";
+            PreparedStatement pstms = connection.prepareStatement(query);
+            
+            
+            boolean hasresults = pstms.execute();
+            
+            if(hasresults){
+                
+                ResultSet resultset = pstms.getResultSet();
+                
+                result = getResultSetAsJSON(resultset);
+            }
+            
+            
+        }
+        
+        catch (Exception e) { e.printStackTrace(); }
         
         return result;
         
@@ -130,7 +210,7 @@ public class Database {
         
             try {
 
-                String url = "jdbc:mysql://" + a + "/jsu_sp22_v1?autoReconnect=true&useSSL=false&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=America/Chicago";
+                String url = "jdbc:mysql://" + a + "/jsu_sp22_v1?autoReconnect=true&useSSL=false&zeroDateTimeBehavior=EXCEPTION&serverTimezone=America/Chicago";
                 // System.err.println("Connecting to " + url + " ...");
 
                 c = DriverManager.getConnection(url, u, p);
